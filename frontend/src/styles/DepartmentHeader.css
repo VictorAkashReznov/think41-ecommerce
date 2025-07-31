@@ -1,0 +1,147 @@
+/* Department Header */
+.department-header {
+  background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: 2rem;
+}
+
+.department-header-content {
+  padding: 2rem 0;
+}
+
+.back-to-all-button {
+  background: none;
+  border: none;
+  color: #667eea;
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  margin-bottom: 1rem;
+  transition: color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.back-to-all-button:hover {
+  color: #5a67d8;
+  text-decoration: underline;
+}
+
+.department-title-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.department-title-main {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.department-title-icon {
+  font-size: 3rem;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.department-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.department-subtitle {
+  font-size: 1.1rem;
+  color: #4a5568;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.department-stats {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.product-count {
+  background: white;
+  color: #4a5568;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .department-header-content {
+    padding: 1.5rem 0;
+  }
+  
+  .department-title-main {
+    gap: 0.75rem;
+  }
+  
+  .department-title-icon {
+    font-size: 2.5rem;
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+  }
+  
+  .department-title {
+    font-size: 2rem;
+  }
+  
+  .department-subtitle {
+    font-size: 1rem;
+  }
+  
+  .back-to-all-button {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .department-header-content {
+    padding: 1rem 0;
+  }
+  
+  .department-title-main {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .department-title-icon {
+    font-size: 2rem;
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+  }
+  
+  .department-title {
+    font-size: 1.75rem;
+  }
+  
+  .department-subtitle {
+    font-size: 0.95rem;
+  }
+  
+  .product-count {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+  }
+}

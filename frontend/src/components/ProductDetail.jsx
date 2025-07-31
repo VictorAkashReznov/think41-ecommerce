@@ -34,7 +34,12 @@ const ProductDetail = () => {
   };
 
   const handleBackClick = () => {
-    navigate("/");
+    // Try to go back to the department if the product has a departmentId
+    if (product && product.departmentId) {
+      navigate(`/departments/${product.departmentId}`);
+    } else {
+      navigate("/");
+    }
   };
 
   const handleQuantityChange = (e) => {
@@ -103,7 +108,8 @@ const ProductDetail = () => {
   return (
     <div className="product-detail-container">
       <button onClick={handleBackClick} className="back-button">
-        ← Back to Products
+        ← Back to{" "}
+        {product && product.departmentId ? product.category : "Products"}
       </button>
 
       <div className="product-detail">

@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import ProductCard from './ProductCard';
-import { productService } from '../services/api';
-import '../styles/ProductList.css';
+import React, { useState, useEffect } from "react";
+import ProductCard from "./ProductCard";
+import DepartmentHeader from "./DepartmentHeader";
+import { productService } from "../services/api";
+import "../styles/ProductList.css";
 
-const ProductList = () => {
+const ProductList = ({ showHeader = true }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
-  const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState('name'); // 'name', 'price', 'rating'
+  const [viewMode, setViewMode] = useState("grid"); // 'grid' or 'list'
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortBy, setSortBy] = useState("name"); // 'name', 'price', 'rating'
 
   useEffect(() => {
     fetchProducts();
@@ -22,15 +23,15 @@ const ProductList = () => {
       const data = await productService.getAllProducts();
       setProducts(Array.isArray(data) ? data : []);
     } catch (err) {
-      setError('Failed to fetch products. Please try again later.');
-      console.error('Error fetching products:', err);
+      setError("Failed to fetch products. Please try again later.");
+      console.error("Error fetching products:", err);
     } finally {
       setLoading(false);
     }
   };
 
   const handleViewModeToggle = () => {
-    setViewMode(viewMode === 'grid' ? 'list' : 'grid');
+    setViewMode(viewMode === "grid" ? "list" : "grid");
   };
 
   const handleSearchChange = (e) => {
@@ -43,20 +44,21 @@ const ProductList = () => {
 
   // Filter and sort products
   const filteredAndSortedProducts = products
-    .filter(product => 
-      product.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.category?.toLowerCase().includes(searchTerm.toLowerCase())
+    .filter(
+      (product) =>
+        product.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.category?.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .sort((a, b) => {
       switch (sortBy) {
-        case 'price':
+        case "price":
           return (a.price || 0) - (b.price || 0);
-        case 'rating':
+        case "rating":
           return (b.rating || 0) - (a.rating || 0);
-        case 'name':
+        case "name":
         default:
-          return (a.name || '').localeCompare(b.name || '');
+          return (a.name || "").localeCompare(b.name || "");
       }
     });
 
@@ -86,9 +88,16 @@ const ProductList = () => {
 
   return (
     <div className="product-list-container">
+      {showHeader && (
+        <DepartmentHeader
+          title="All Products"
+          subtitle="Browse our complete collection"
+          productCount={filteredAndSortedProducts.length}
+          showBackButton={false}
+        />
+      )}
+
       <div className="product-list-header">
-        <h1>Products</h1>
-        
         <div className="controls">
           <div className="search-container">
             <input
@@ -99,27 +108,32 @@ const ProductList = () => {
               className="search-input"
             />
           </div>
-          
+
           <div className="sort-container">
-            <select value={sortBy} onChange={handleSortChange} className="sort-select">
+            <select
+              value={sortBy}
+              onChange={handleSortChange}
+              className="sort-select"
+            >
               <option value="name">Sort by Name</option>
               <option value="price">Sort by Price</option>
               <option value="rating">Sort by Rating</option>
             </select>
           </div>
-          
-          <button 
+
+          <button
             onClick={handleViewModeToggle}
             className={`view-toggle ${viewMode}`}
-            title={`Switch to ${viewMode === 'grid' ? 'list' : 'grid'} view`}
+            title={`Switch to ${viewMode === "grid" ? "list" : "grid"} view`}
           >
-            {viewMode === 'grid' ? '☰' : '⊞'}
+            {viewMode === "grid" ? "☰" : "⊞"}
           </button>
         </div>
       </div>
 
       <div className="products-count">
-        {filteredAndSortedProducts.length} product{filteredAndSortedProducts.length !== 1 ? 's' : ''} found
+        {filteredAndSortedProducts.length} product
+        {filteredAndSortedProducts.length !== 1 ? "s" : ""} found
       </div>
 
       {filteredAndSortedProducts.length === 0 ? (
@@ -129,9 +143,9 @@ const ProductList = () => {
       ) : (
         <div className={`products-container ${viewMode}`}>
           {filteredAndSortedProducts.map((product) => (
-            <ProductCard 
-              key={product.id} 
-              product={product} 
+            <ProductCard
+              key={product.id}
+              product={product}
               viewMode={viewMode}
             />
           ))}

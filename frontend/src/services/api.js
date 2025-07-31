@@ -1,5 +1,11 @@
 import axios from "axios";
-import { getMockProducts, getMockProductById } from "./mockData";
+import {
+  getMockProducts,
+  getMockProductById,
+  getMockDepartments,
+  getMockProductsByDepartment,
+  getMockDepartmentById,
+} from "./mockData";
 
 const API_BASE_URL = "http://localhost:3000/api";
 
@@ -77,6 +83,54 @@ export const productService = {
       );
       // Fall back to mock data if API is not available
       return await getMockProductById(id);
+    }
+  },
+};
+
+// Department service functions
+export const departmentService = {
+  // Get all departments
+  getAllDepartments: async () => {
+    try {
+      const response = await api.get("/departments");
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Error fetching departments from API, falling back to mock data:",
+        error
+      );
+      // Fall back to mock data if API is not available
+      return await getMockDepartments();
+    }
+  },
+
+  // Get single department by ID
+  getDepartmentById: async (id) => {
+    try {
+      const response = await api.get(`/departments/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error(
+        `Error fetching department with ID ${id} from API, falling back to mock data:`,
+        error
+      );
+      // Fall back to mock data if API is not available
+      return await getMockDepartmentById(id);
+    }
+  },
+
+  // Get products by department
+  getProductsByDepartment: async (departmentId) => {
+    try {
+      const response = await api.get(`/departments/${departmentId}/products`);
+      return response.data;
+    } catch (error) {
+      console.error(
+        `Error fetching products for department ${departmentId} from API, falling back to mock data:`,
+        error
+      );
+      // Fall back to mock data if API is not available
+      return await getMockProductsByDepartment(departmentId);
     }
   },
 };
