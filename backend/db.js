@@ -52,7 +52,14 @@ const orderSchema = new mongoose.Schema({
   num_of_item: Number,
 });
 
-// 5. Product Schema
+// 5. Department Schema
+const departmentSchema = new mongoose.Schema({
+  id: { type: String, unique: true },
+  name: { type: String, required: true, unique: true },
+  created_at: { type: Date, default: Date.now },
+});
+
+// 6. Product Schema (updated with department_id reference)
 const productSchema = new mongoose.Schema({
   id: { type: String, unique: true },
   cost: Number,
@@ -60,12 +67,14 @@ const productSchema = new mongoose.Schema({
   name: String,
   brand: String,
   retail_price: Number,
+  department_id: { type: String },
+  // Keep the old department field temporarily for migration
   department: String,
   sku: String,
   distribution_center_id: String,
 });
 
-// 6. User Schema
+// 7. User Schema
 const userSchema = new mongoose.Schema({
   id: { type: String, unique: true },
   first_name: String,
@@ -92,6 +101,7 @@ module.exports = {
   InventoryItem: mongoose.model("InventoryItem", inventoryItemSchema),
   OrderItem: mongoose.model("OrderItem", orderItemSchema),
   Order: mongoose.model("Order", orderSchema),
+  Department: mongoose.model("Department", departmentSchema),
   Product: mongoose.model("Product", productSchema),
   User: mongoose.model("User", userSchema),
 };
