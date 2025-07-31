@@ -61,17 +61,119 @@ router.get("/products/:id", async (req, res) => {
   }
 });
 
-// Get all departments
+// Get all departments with product counts
 router.get("/departments", async (req, res) => {
   try {
     const departments = await Department.find({}).sort({ name: 1 });
+
+    // Get product counts for each department
+    const departmentsWithCounts = await Promise.all(
+      departments.map(async (dept) => {
+        const productCount = await Product.countDocuments({
+          department_id: dept.id,
+        });
+        return {
+          ...dept.toObject(),
+          product_count: productCount,
+        };
+      })
+    );
+
     console.log(`Found ${departments.length} departments`);
-    res.json(departments);
+    res.json(departmentsWithCounts);
   } catch (error) {
     console.error("Error fetching departments:", error);
     res
       .status(500)
       .json({ message: "Error fetching departments", error: error.message });
+  }
+});
+
+// Get specific department by id
+router.get("/departments/:id", async (req, res) => {
+  try {
+    const department = await Department.findOne({ id: req.params.id });
+
+    if (!department) {
+      return res.status(404).json({ message: "Department not found" });
+    }
+
+    // Get product count for this department
+    const productCount = await Product.countDocuments({
+      department_id: department.id,
+    });
+
+    const departmentWithCount = {
+      ...department.toObject(),
+      product_count: productCount,
+    };
+
+    console.log(
+      `Found department: ${department.name} with ${productCount} products`
+    );
+    res.json(departmentWithCount);
+  } catch (error) {
+    console.error("Error fetching department:", error);
+    res
+      .status(500)
+      .json({ message: "Error fetching department", error: error.message });
+  }
+});
+
+// Get all products within a specific department
+router.get("/departments/:id/products", async (req, res) => {
+  try {
+    // First check if department exists
+    const department = await Department.findOne({ id: req.params.id });
+
+    if (!department) {
+      return res.status(404).json({ message: "Department not found" });
+    }
+
+    // Get all products for this department
+    const products = await Product.find({ department_id: req.params.id });
+
+    if (products.length === 0) {
+      return res.json({
+        department: {
+          id: department.id,
+          name: department.name,
+        },
+        products: [],
+        total_products: 0,
+        message: "No products found in this department",
+      });
+    }
+
+    // Add department info to each product
+    const productsWithDepartment = products.map((product) => {
+      const productObj = product.toObject();
+      productObj.department_info = {
+        id: department.id,
+        name: department.name,
+      };
+      return productObj;
+    });
+
+    console.log(
+      `Found ${products.length} products in department: ${department.name}`
+    );
+    res.json({
+      department: {
+        id: department.id,
+        name: department.name,
+      },
+      products: productsWithDepartment,
+      total_products: products.length,
+    });
+  } catch (error) {
+    console.error("Error fetching department products:", error);
+    res
+      .status(500)
+      .json({
+        message: "Error fetching department products",
+        error: error.message,
+      });
   }
 });
 
