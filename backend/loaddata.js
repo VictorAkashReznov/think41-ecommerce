@@ -61,4 +61,4 @@ async function loadAllCSVs() {
   }
 }
 
-loadAllCSVs();
+// loadAllCSVs();
