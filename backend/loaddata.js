@@ -11,10 +11,12 @@ const {
   User,
 } = require("./db"); // assumes db.js is in the same directory
 
-// MongoDB connection
-mongoose.connect(
-  "mongodb+srv://mongo2024:mongo2024@cluster0.yvsdl.mongodb.net/?retryWrites=true&w=majority&appName=ecommerce"
-);
+// MongoDB connection (only connect if not already connected)
+if (mongoose.connection.readyState === 0) {
+  mongoose.connect("mongodb://127.0.0.1:27017/ecommerce").then(() => {
+    console.log("Connected to MongoDB from loaddata");
+  });
+}
 
 // CSV Loader Function
 function loadCSVToDB(filePath, Model) {
@@ -54,11 +56,11 @@ async function loadAllCSVs() {
     await loadCSVToDB("../archive/products.csv", Product);
     await loadCSVToDB("../archive/users.csv", User);
     console.log(" All data loaded successfully!");
-    mongoose.disconnect();
+    // Don't disconnect when called from API - let the main server manage the connection
   } catch (err) {
     console.error("Failed to load all data:", err);
-    mongoose.disconnect();
+    // Don't disconnect on error either - let the main server handle it
   }
 }
 
-// loadAllCSVs();
+module.exports = loadAllCSVs;
